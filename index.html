@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mizan — Rendez à votre temps son sens</title>
+<meta name="description" content="Mizan transforme chaque scroll en instant de connexion. Rappels de priere, versets, dhikr — l'application qui remplace le vide numerique par la presence spirituelle.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage: #4A5D4F;
+    --sage-deep: #3A4A3F;
+    --sage-soft: #6E8470;
+    --cream: #F5F0E8;
+    --cream-warm: #EDE6D8;
+    --off-white: #FBFAF6;
+    --gold: #C9A961;
+    --gold-soft: #D9BE86;
+    --ink: #1C201D;
+    --ink-mute: #5A605C;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--off-white);
+    font-weight: 400;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  a:hover { color: var(--sage); }
+  .serif { font-family: 'Fraunces', 'Playfair Display', Georgia, serif; font-weight: 400; letter-spacing: -0.015em; }
+  .italic { font-style: italic; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal { opacity: 1; }
+  .reveal.will-animate { opacity: 0; }
+  .reveal.will-animate.in { animation: fadeUp 1s cubic-bezier(.2,.7,.2,1) forwards; }
+  @keyframes floaty {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .float { animation: floaty 6s ease-in-out infinite; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 16px 28px; border-radius: 999px;
+    font-family: inherit; font-size: 15px; font-weight: 500; letter-spacing: 0.01em;
+    cursor: pointer; border: none; transition: all .25s ease;
+    text-decoration: none;
+  }
+  .btn-primary { background: var(--sage); color: var(--off-white); }
+  .btn-primary:hover { background: var(--sage-deep); color: var(--off-white); transform: translateY(-1px); box-shadow: 0 10px 30px rgba(74,93,79,.25); }
+  .btn-ghost { background: transparent; color: var(--sage); border: 1px solid rgba(74,93,79,.25); }
+  .btn-ghost:hover { background: rgba(74,93,79,.06); color: var(--sage); }
+  .btn-gold { background: var(--gold); color: var(--off-white); }
+  .btn-gold:hover { background: #B89550; color: var(--off-white); transform: translateY(-1px); }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+  @media (max-width: 640px) { .wrap { padding: 0 20px; } }
+  .eyebrow {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--sage);
+  }
+  .eyebrow-gold { color: var(--gold); }
+  .eyebrow .dot { display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: currentColor; margin: 0 10px 2px; vertical-align: middle; }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
+  .nav-link { transition: color .2s; }
+  .nav-link:hover { color: var(--sage); }
+  @media (max-width: 820px) { nav .nav-link { display: none !important; } }
+  @media (max-width: 900px) {
+    section > .wrap[data-hero] { grid-template-columns: 1fr !important; gap: 60px !important; }
+    .compare-grid, .verse-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+    .mech-grid { grid-template-columns: 1fr 1fr !important; }
+    .verse-call { padding: 40px 28px !important; }
+    .stats-grid { grid-template-columns: 1fr !important; gap: 48px !important; }
+    .feature-grid { grid-template-columns: 1fr !important; }
+    .screens-grid { grid-template-columns: 1fr !important; gap: 60px !important; }
+    .screens-grid > div { transform: none !important; }
+    .bio-grid, .faq-grid, .split, .quote-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+    section { padding: 80px 0 !important; }
+  }
+  @media (max-width: 560px) {
+    .mech-grid { grid-template-columns: 1fr !important; }
+  }
+  .faq-item { border-top: 1px solid rgba(74,93,79,.15); padding: 24px 0; }
+  .faq-item:last-child { border-bottom: 1px solid rgba(74,93,79,.15); }
+  .faq-item summary {
+    cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;
+    font-family: 'Fraunces', serif; font-size: 20px; letter-spacing: -0.01em; color: var(--ink);
+    font-weight: 400; gap: 20px;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-mark {
+    font-family: 'Fraunces', serif; font-size: 24px; color: var(--gold); font-weight: 300;
+    transition: transform .3s cubic-bezier(.2,.7,.2,1);
+    width: 24px; text-align: center; flex-shrink: 0;
+  }
+  .faq-item[open] .faq-mark { transform: rotate(45deg); }
+  .faq-body {
+    padding-top: 16px; font-size: 15px; line-height: 1.65; color: var(--ink-mute);
+    max-width: 560px;
+    animation: fadeUp .4s cubic-bezier(.2,.7,.2,1);
+  }
+  .faq-item summary:hover { color: var(--sage); }
+</style>
+</head>
+<body>
+<main style="overflow-x: hidden;">
+
+<nav style="position: sticky; top: 0; z-index: 50; background: rgba(251,250,246,.85); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(74,93,79,.08);">
+  <div class="wrap" style="display: flex; align-items: center; justify-content: space-between; padding-top: 20px; padding-bottom: 20px;">
+    <a href="#" style="display: flex; align-items: center; gap: 10px;">
+      <img src="icon.png" alt="Logo Mizan" style="width: 44px; height: 44px; display: block;">
+      <span class="serif" style="font-size: 20px; letter-spacing: -0.01em;">Mizan</span>
+    </a>
+    <div style="display: flex; align-items: center; gap: 36px; font-size: 14px; color: var(--ink-mute);">
+      <a href="#solution" class="nav-link">La solution</a>
+      <a href="#app" class="nav-link">L'app</a>
+      <a href="#about" class="nav-link">Le projet</a>
+      <a href="#soutien" class="nav-link">Soutenir</a>
+      <a href="#faq" class="nav-link">FAQ</a>
+    </div>
+  </div>
+</nav>
+
+<section style="padding: 100px 0 80px; position: relative;">
+  <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at 20% 20%, rgba(201,169,97,.08), transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(74,93,79,.06), transparent 55%); pointer-events: none;"></div>
+  <div class="wrap" data-hero style="position: relative; display: grid; grid-template-columns: 1.1fr 1fr; gap: 80px; align-items: center;">
+    <div class="reveal">
+      <div class="eyebrow" style="margin-bottom: 32px;">
+        <span>En developpement</span><span class="dot"></span><span>Lancement Ramadan 2026</span>
+      </div>
+      <h1 class="serif" style="font-size: clamp(44px, 6.2vw, 80px); line-height: 1.02; letter-spacing: -0.03em; margin-bottom: 32px; font-weight: 400;">
+        Rendez a votre<br>
+        temps son <span class="italic" style="color: var(--sage);">sens.</span>
+      </h1>
+      <p style="font-size: 19px; line-height: 1.55; color: var(--ink-mute); max-width: 480px; margin-bottom: 40px;">
+        Mizan transforme chaque scroll en instant de connexion. Rappels de priere, versets, dhikr, l'application qui remplace le vide numerique par la presence spirituelle.
+      </p>
+      <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+        <a href="#app" class="btn btn-primary">
+          <span>Decouvrir l'app</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#solution" class="btn btn-ghost">Voir les fonctionnalites</a>
+      </div>
+      <div style="display: flex; gap: 40px; margin-top: 56px; padding-top: 32px; border-top: 1px solid rgba(74,93,79,.12);">
+        <div>
+          <div class="serif" style="font-size: 32px; color: var(--sage); letter-spacing: -0.02em;">5</div>
+          <div style="font-size: 12px; color: var(--ink-mute); margin-top: 2px;">prieres rappelees</div>
+        </div>
+        <div>
+          <div class="serif" style="font-size: 32px; color: var(--sage); letter-spacing: -0.02em;">0<span style="font-size: 18px; color: var(--ink-mute);">&euro;</span></div>
+          <div style="font-size: 12px; color: var(--ink-mute); margin-top: 2px;">gratuit, sans pub</div>
+        </div>
+        <div>
+          <div class="serif" style="font-size: 32px; color: var(--sage); letter-spacing: -0.02em;">&infin;</div>
+          <div style="font-size: 12px; color: var(--ink-mute); margin-top: 2px;">temps rendu</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: center;" class="reveal">
+      <div class="float" style="position: relative;">
+        <div style="position: absolute; width: 420px; height: 420px; border: 1px solid rgba(201,169,97,.3); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0;"></div>
+        <div style="position: absolute; width: 320px; height: 320px; border-radius: 50%; background: radial-gradient(circle, rgba(74,93,79,.08), transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0;"></div>
+        <div style="position: relative; z-index: 1; width: 280px; height: 580px; background: #1C201D; border-radius: 44px; padding: 10px; box-shadow: 0 40px 80px -20px rgba(28,32,29,.35), 0 0 0 1px rgba(28,32,29,.1);">
+          <div style="width: 100%; height: 100%; background: var(--cream); border-radius: 34px; overflow: hidden; position: relative;">
+            <div style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 110px; height: 28px; background: #1C201D; border-radius: 20px; z-index: 3;"></div>
+            <div style="position: absolute; top: 14px; left: 24px; font-size: 12px; font-weight: 600; color: var(--ink); z-index: 2;">14:32</div>
+            <div style="position: absolute; top: 14px; right: 24px; display: flex; gap: 4px; align-items: center; z-index: 2;">
+              <svg width="14" height="10" viewBox="0 0 14 10" fill="var(--ink)"><rect x="1" y="7" width="2" height="2"/><rect x="4" y="5" width="2" height="4"/><rect x="7" y="3" width="2" height="6"/><rect x="10" y="1" width="2" height="8"/></svg>
+            </div>
+            <div style="padding: 56px 24px 24px;">
+              <div style="font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sage); margin-bottom: 6px;">Dhuhr &middot; dans 12 min</div>
+              <div class="serif" style="font-size: 26px; line-height: 1.1; color: var(--ink); letter-spacing: -0.02em; margin-bottom: 24px;">Un instant avec Lui.</div>
+              <div style="background: var(--off-white); border-radius: 18px; padding: 18px; margin-bottom: 14px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                  <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--sage); display: flex; align-items: center; justify-content: center; color: var(--cream); font-size: 14px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  </div>
+                  <div>
+                    <div style="font-size: 13px; font-weight: 600;">Dhuhr</div>
+                    <div style="font-size: 11px; color: var(--ink-mute);">13:44</div>
+                  </div>
+                  <div style="margin-left: auto; font-family: 'Fraunces', serif; font-size: 18px; color: var(--sage);">&mdash;</div>
+                </div>
+                <div style="height: 4px; background: var(--cream-warm); border-radius: 2px; overflow: hidden;">
+                  <div style="width: 68%; height: 100%; background: var(--gold);"></div>
+                </div>
+              </div>
+              <div style="background: var(--sage); border-radius: 18px; padding: 20px; color: var(--cream);">
+                <div style="font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; opacity: .6; margin-bottom: 10px;">Verset du jour</div>
+                <div class="serif italic" style="font-size: 16px; line-height: 1.4;">&laquo; En verite, c'est par le rappel d'Allah que les coeurs se tranquillisent. &raquo;</div>
+                <div style="font-size: 11px; opacity: .6; margin-top: 10px;">Ar-Ra'd &middot; 13:28</div>
+              </div>
+              <div style="display: flex; gap: 8px; margin-top: 14px;">
+                <div style="flex: 1; background: var(--cream-warm); border-radius: 12px; padding: 10px; text-align: center;">
+                  <div style="font-size: 10px; color: var(--ink-mute);">Dhikr</div>
+                  <div style="font-size: 13px; font-weight: 600; color: var(--sage);">33 &times;</div>
+                </div>
+                <div style="flex: 1; background: var(--cream-warm); border-radius: 12px; padding: 10px; text-align: center;">
+                  <div style="font-size: 10px; color: var(--ink-mute);">Coran</div>
+                  <div style="font-size: 13px; font-weight: 600; color: var(--sage);">8 min</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="probleme" style="padding: 120px 0; background: var(--cream);">
+  <div class="wrap">
+    <div style="max-width: 720px; margin-bottom: 80px;" class="reveal">
+      <div class="eyebrow" style="margin-bottom: 20px;">01 &mdash; Le constat</div>
+      <h2 class="serif" style="font-size: clamp(36px, 4.8vw, 60px); line-height: 1.05; letter-spacing: -0.02em; font-weight: 400;">
+        Nous passons plus de temps a <span class="italic" style="color: var(--sage);">defiler</span> qu'a <span class="italic" style="color: var(--gold);">prier.</span>
+      </h2>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;" class="stats-grid">
+      <div class="reveal" style="border-top: 1px solid rgba(74,93,79,.2); padding-top: 32px;">
+        <div class="serif" style="font-size: clamp(72px, 8vw, 112px); line-height: 1; color: var(--sage); letter-spacing: -0.04em; font-weight: 300; margin-bottom: 16px;">4<span style="color: var(--gold);">h</span>37</div>
+        <div style="font-size: 15px; color: var(--ink-mute); line-height: 1.5; max-width: 280px;">
+          <strong style="color: var(--ink); font-weight: 500;">de temps d'ecran</strong> en moyenne par jour chez les 18-34 ans, dont pres de la moitie sur les reseaux sociaux.
+        </div>
+      </div>
+      <div class="reveal" style="border-top: 1px solid rgba(74,93,79,.2); padding-top: 32px;">
+        <div class="serif" style="font-size: clamp(72px, 8vw, 112px); line-height: 1; color: var(--sage); letter-spacing: -0.04em; font-weight: 300; margin-bottom: 16px;">150<span style="color: var(--gold);">&times;</span></div>
+        <div style="font-size: 15px; color: var(--ink-mute); line-height: 1.5; max-width: 280px;">
+          <strong style="color: var(--ink); font-weight: 500;">le telephone deverrouille</strong> par jour en moyenne, un geste reflexe toutes les six minutes.
+        </div>
+      </div>
+      <div class="reveal" style="border-top: 1px solid rgba(74,93,79,.2); padding-top: 32px;">
+        <div class="serif" style="font-size: clamp(72px, 8vw, 112px); line-height: 1; color: var(--sage); letter-spacing: -0.04em; font-weight: 300; margin-bottom: 16px;">17<span style="color: var(--gold);">min</span></div>
+        <div style="font-size: 15px; color: var(--ink-mute); line-height: 1.5; max-width: 280px;">
+          <strong style="color: var(--ink); font-weight: 500;">consacrees a la priere quotidienne</strong> dans l'ideal, soit 15 fois moins que le temps donne aux applications.
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 100px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 80px; align-items: center;" class="compare-grid">
+      <div class="reveal">
+        <div class="eyebrow" style="margin-bottom: 20px;">Mis bout a bout</div>
+        <h3 class="serif" style="font-size: clamp(28px, 3.2vw, 42px); line-height: 1.1; letter-spacing: -0.02em; font-weight: 400; margin-bottom: 24px;">
+          Sur une vie moyenne, nous passerons <span class="italic" style="color: var(--sage);">onze ans</span> les yeux dans un ecran.
+        </h3>
+        <p style="font-size: 16px; color: var(--ink-mute); line-height: 1.6; margin-bottom: 20px;">
+          Onze ans, c'est plus que le temps consacre a manger, a parler avec ses proches, ou a prier. C'est l'equivalent de 96 360 heures prises sur ce qui fait, litteralement, une vie.
+        </p>
+        <p style="font-size: 16px; color: var(--ink-mute); line-height: 1.6;">
+          Et sur ces onze ans, pres de <strong style="color: var(--sage); font-weight: 600;">cinq annees entieres</strong> auront ete offertes aux applications dont le modele economique repose sur votre temps d'attention.
+        </p>
+      </div>
+      <div class="reveal" style="display: flex; flex-direction: column; gap: 22px;">
+        <div style="font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 4px;">Annees d'une vie (base 80 ans)</div>
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+            <span style="font-size: 14px; font-weight: 500;">Sommeil</span>
+            <span class="serif" style="font-size: 20px; color: var(--sage); letter-spacing: -0.02em;">26 ans</span>
+          </div>
+          <div style="height: 10px; background: var(--off-white); border-radius: 2px; overflow: hidden;"><div style="width: 100%; height: 100%; background: var(--sage); opacity: .35;"></div></div>
+        </div>
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+            <span style="font-size: 14px; font-weight: 500;">Travail</span>
+            <span class="serif" style="font-size: 20px; color: var(--sage); letter-spacing: -0.02em;">13 ans</span>
+          </div>
+          <div style="height: 10px; background: var(--off-white); border-radius: 2px; overflow: hidden;"><div style="width: 50%; height: 100%; background: var(--sage); opacity: .5;"></div></div>
+        </div>
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+            <span style="font-size: 14px; font-weight: 600; color: var(--ink);">Ecrans</span>
+            <span class="serif" style="font-size: 24px; color: var(--gold); letter-spacing: -0.02em; font-weight: 500;">11 ans</span>
+          </div>
+          <div style="height: 10px; background: var(--off-white); border-radius: 2px; overflow: hidden;"><div style="width: 42%; height: 100%; background: var(--gold);"></div></div>
+          <div style="font-size: 11px; color: var(--gold); margin-top: 6px; letter-spacing: 0.03em;">dont ~5 ans sur les reseaux sociaux</div>
+        </div>
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+            <span style="font-size: 14px; font-weight: 500;">Repas &amp; cuisine</span>
+            <span class="serif" style="font-size: 20px; color: var(--sage); letter-spacing: -0.02em;">4,5 ans</span>
+          </div>
+          <div style="height: 10px; background: var(--off-white); border-radius: 2px; overflow: hidden;"><div style="width: 17%; height: 100%; background: var(--sage); opacity: .5;"></div></div>
+        </div>
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+            <span style="font-size: 14px; font-weight: 500;">Temps avec ses enfants</span>
+            <span class="serif" style="font-size: 20px; color: var(--sage); letter-spacing: -0.02em;">2 ans</span>
+          </div>
+          <div style="height: 10px; background: var(--off-white); border-radius: 2px; overflow: hidden;"><div style="width: 8%; height: 100%; background: var(--sage); opacity: .5;"></div></div>
+        </div>
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+            <span style="font-size: 14px; font-weight: 500;">Priere quotidienne</span>
+            <span class="serif" style="font-size: 20px; color: var(--sage); letter-spacing: -0.02em;">0,9 an</span>
+          </div>
+          <div style="height: 10px; background: var(--off-white); border-radius: 2px; overflow: hidden;"><div style="width: 3.5%; height: 100%; background: var(--sage); opacity: .5;"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 120px;" class="reveal">
+      <div style="max-width: 720px; margin-bottom: 48px;">
+        <div class="eyebrow" style="margin-bottom: 16px;">Ce qu'on nous fait, precisement</div>
+        <h3 class="serif" style="font-size: clamp(28px, 3.2vw, 42px); line-height: 1.1; letter-spacing: -0.02em; font-weight: 400;">
+          Les reseaux sociaux ne sont pas un divertissement. Ce sont des <span class="italic" style="color: var(--sage);">systemes d'ingenierie comportementale.</span>
+        </h3>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;" class="mech-grid">
+        <div style="border-top: 1px solid rgba(74,93,79,.25); padding-top: 20px;">
+          <div class="serif italic" style="font-size: 20px; color: var(--gold); margin-bottom: 10px;">i.</div>
+          <div class="serif" style="font-size: 18px; letter-spacing: -0.01em; margin-bottom: 10px; font-weight: 500;">Scroll infini</div>
+          <p style="font-size: 13px; color: var(--ink-mute); line-height: 1.55;">Pas de fin, pas de pause de decision, la meme mecanique que les machines a sous.</p>
+        </div>
+        <div style="border-top: 1px solid rgba(74,93,79,.25); padding-top: 20px;">
+          <div class="serif italic" style="font-size: 20px; color: var(--gold); margin-bottom: 10px;">ii.</div>
+          <div class="serif" style="font-size: 18px; letter-spacing: -0.01em; margin-bottom: 10px; font-weight: 500;">Recompense variable</div>
+          <p style="font-size: 13px; color: var(--ink-mute); line-height: 1.55;">Le prochain post sera-t-il drole, choquant, emouvant ? Le cerveau reste accroche a l'incertitude.</p>
+        </div>
+        <div style="border-top: 1px solid rgba(74,93,79,.25); padding-top: 20px;">
+          <div class="serif italic" style="font-size: 20px; color: var(--gold); margin-bottom: 10px;">iii.</div>
+          <div class="serif" style="font-size: 18px; letter-spacing: -0.01em; margin-bottom: 10px; font-weight: 500;">Validation sociale</div>
+          <p style="font-size: 13px; color: var(--ink-mute); line-height: 1.55;">Likes, vues, commentaires, un compteur permanent de l'estime percue, calibre pour l'anxiete.</p>
+        </div>
+        <div style="border-top: 1px solid rgba(74,93,79,.25); padding-top: 20px;">
+          <div class="serif italic" style="font-size: 20px; color: var(--gold); margin-bottom: 10px;">iv.</div>
+          <div class="serif" style="font-size: 18px; letter-spacing: -0.01em; margin-bottom: 10px; font-weight: 500;">Outrage amplifie</div>
+          <p style="font-size: 13px; color: var(--ink-mute); line-height: 1.55;">L'algorithme pousse ce qui revolte, la colere retient 7 fois plus longtemps que la joie.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 120px; display: grid; grid-template-columns: auto 1fr; gap: 40px; align-items: start; max-width: 920px;" class="quote-grid">
+      <div class="serif italic" style="font-size: 120px; line-height: 0.6; color: var(--gold); font-weight: 300;">&ldquo;</div>
+      <div>
+        <p class="serif italic" style="font-size: clamp(22px, 2.4vw, 30px); line-height: 1.35; color: var(--ink); letter-spacing: -0.01em; margin-bottom: 24px; font-weight: 400;">
+          Nous avons cree des outils qui dechirent le tissu social : comment les gens cooperent, comment ils parlent, comment ils se comportent. Je me sens coupable d'une immense culpabilite.
+        </p>
+        <div style="font-size: 13px; color: var(--ink-mute); letter-spacing: 0.05em;">&mdash; Chamath Palihapitiya, ancien vice-president de Facebook, 2017</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 100px; padding: 56px 48px; background: var(--sage); color: var(--cream); max-width: 1000px; margin-left: auto; margin-right: auto;" class="reveal verse-call">
+      <div style="display: grid; grid-template-columns: 1fr 1.6fr; gap: 60px; align-items: center;" class="verse-grid">
+        <div>
+          <div style="font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px;">Et pourtant il nous a ete dit &mdash;</div>
+          <div class="serif italic" style="font-size: clamp(26px, 3vw, 36px); line-height: 1.1; color: var(--gold); letter-spacing: -0.02em;">&#1608;&#1614;&#1604;&#1614;&#1575; &#1578;&#1615;&#1591;&#1616;&#1593;&#1618; &#1605;&#1614;&#1606;&#1618; &#1571;&#1614;&#1594;&#1618;&#1601;&#1614;&#1604;&#1618;&#1606;&#1614;&#1575; &#1602;&#1614;&#1604;&#1618;&#1576;&#1614;&#1607;&#1615; &#1593;&#1614;&#1606; &#1584;&#1616;&#1603;&#1618;&#1585;&#1616;&#1606;&#1614;&#1575;</div>
+        </div>
+        <div>
+          <p class="serif italic" style="font-size: clamp(18px, 2vw, 24px); line-height: 1.4; margin-bottom: 16px;">
+            &laquo; N'obeis pas a celui dont Nous avons rendu le coeur inattentif a Notre rappel, qui suit sa passion et dont le comportement est outrancier. &raquo;
+          </p>
+          <div style="font-size: 12px; opacity: .7; letter-spacing: 0.08em;">AL-KAHF &middot; 18:28 &mdash; revele il y a quatorze siecles, d'une actualite troublante.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="solution" style="padding: 140px 0;">
+  <div class="wrap">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-bottom: 80px; align-items: end;" class="split">
+      <div class="reveal">
+        <div class="eyebrow" style="margin-bottom: 20px;">02 &mdash; La proposition</div>
+        <h2 class="serif" style="font-size: clamp(36px, 4.8vw, 60px); line-height: 1.05; letter-spacing: -0.02em; font-weight: 400;">
+          Une application qui vous rend<br>
+          votre <span class="italic" style="color: var(--sage);">attention.</span>
+        </h2>
+      </div>
+      <div class="reveal">
+        <p style="font-size: 17px; color: var(--ink-mute); line-height: 1.6; max-width: 460px;">
+          Mizan ne bloque pas, elle redirige. Chaque fois que vous etes sur le point d'ouvrir un reseau social, l'app vous propose un geste simple, court, spirituel. Un verset, un dhikr, un instant de silence.
+        </p>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; background: rgba(74,93,79,.12); border: 1px solid rgba(74,93,79,.12);" class="feature-grid">
+      <div style="background: var(--off-white); padding: 48px 40px; display: flex; flex-direction: column; gap: 20px; min-height: 320px;" class="feature reveal">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--cream); display: flex; align-items: center; justify-content: center; color: var(--sage);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <span class="serif italic" style="font-size: 15px; color: var(--gold);">i.</span>
+        </div>
+        <div style="margin-top: auto;">
+          <h3 class="serif" style="font-size: 28px; line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 12px; font-weight: 400;">Rappels de priere intelligents</h3>
+          <p style="color: var(--ink-mute); font-size: 15px; line-height: 1.55;">
+            Les cinq prieres se glissent dans votre journee au bon moment, basees sur votre position, votre methode de calcul, votre rythme.
+          </p>
+        </div>
+      </div>
+      <div style="background: var(--off-white); padding: 48px 40px; display: flex; flex-direction: column; gap: 20px; min-height: 320px;" class="feature reveal">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--cream); display: flex; align-items: center; justify-content: center; color: var(--sage);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <span class="serif italic" style="font-size: 15px; color: var(--gold);">ii.</span>
+        </div>
+        <div style="margin-top: auto;">
+          <h3 class="serif" style="font-size: 28px; line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 12px; font-weight: 400;">Un verset a la place du scroll</h3>
+          <p style="color: var(--ink-mute); font-size: 15px; line-height: 1.55;">
+            Instagram, TikTok, X, quand vous ouvrez une app chronophage, Mizan propose d'abord un verset du Coran. Vous choisissez.
+          </p>
+        </div>
+      </div>
+      <div style="background: var(--off-white); padding: 48px 40px; display: flex; flex-direction: column; gap: 20px; min-height: 320px;" class="feature reveal">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--cream); display: flex; align-items: center; justify-content: center; color: var(--sage);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a7 7 0 0 1 7 7c0 3-2 5-5 7-2 1-3 2-3 4"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>
+          </div>
+          <span class="serif italic" style="font-size: 15px; color: var(--gold);">iii.</span>
+        </div>
+        <div style="margin-top: auto;">
+          <h3 class="serif" style="font-size: 28px; line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 12px; font-weight: 400;">Dhikr guide, haptique</h3>
+          <p style="color: var(--ink-mute); font-size: 15px; line-height: 1.55;">
+            Un compteur discret, une vibration douce. Sub'hanAllah, Alhamdulillah, Allahou Akbar, comptez sans regarder, concentrez-vous.
+          </p>
+        </div>
+      </div>
+      <div style="background: var(--off-white); padding: 48px 40px; display: flex; flex-direction: column; gap: 20px; min-height: 320px;" class="feature reveal">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--cream); display: flex; align-items: center; justify-content: center; color: var(--sage);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg>
+          </div>
+          <span class="serif italic" style="font-size: 15px; color: var(--gold);">iv.</span>
+        </div>
+        <div style="margin-top: auto;">
+          <h3 class="serif" style="font-size: 28px; line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 12px; font-weight: 400;">Un miroir, pas un juge</h3>
+          <p style="color: var(--ink-mute); font-size: 15px; line-height: 1.55;">
+            Chaque fin de semaine, un bilan honnete : temps donne a la priere, au Coran, aux ecrans. Sans culpabilite, avec clarte.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="app" style="padding: 140px 0; background: var(--sage); color: var(--cream); position: relative; overflow: hidden;">
+  <div style="position: absolute; top: 10%; right: -200px; width: 500px; height: 500px; border-radius: 50%; border: 1px solid rgba(201,169,97,.2);"></div>
+  <div style="position: absolute; bottom: -300px; left: -100px; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(201,169,97,.08), transparent 70%);"></div>
+  <div class="wrap" style="position: relative;">
+    <div style="max-width: 720px; margin: 0 auto 80px; text-align: center;" class="reveal">
+      <div class="eyebrow eyebrow-gold" style="margin-bottom: 20px;">03 &mdash; L'application</div>
+      <h2 class="serif" style="font-size: clamp(36px, 4.8vw, 60px); line-height: 1.05; letter-spacing: -0.02em; color: var(--cream); font-weight: 400;">
+        Pensee pour <span class="italic" style="color: var(--gold);">disparaitre</span> dans votre journee.
+      </h2>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; align-items: end;" class="screens-grid">
+      <div class="reveal" style="transform: translateY(20px);">
+        <div style="width: 100%; max-width: 260px; margin: 0 auto;">
+          <div style="width: 100%; aspect-ratio: 280/580; background: #1C201D; border-radius: 36px; padding: 8px; box-shadow: 0 30px 60px -20px rgba(0,0,0,.4);">
+            <div style="width: 100%; height: 100%; background: var(--off-white); border-radius: 28px; overflow: hidden; position: relative; color: var(--ink);">
+              <div style="position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 80px; height: 20px; background: #1C201D; border-radius: 14px;"></div>
+              <div style="padding: 44px 20px 20px;">
+                <div style="font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sage); margin-bottom: 4px;">Aujourd'hui</div>
+                <div class="serif" style="font-size: 22px; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 20px;">Vendredi<br>le 12 mars</div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                  <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--cream); border-radius: 12px;">
+                    <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--gold);"></div>
+                    <div style="flex: 1; font-size: 12px; font-weight: 500;">Fajr</div>
+                    <div style="font-size: 11px; color: var(--ink-mute);">06:12</div>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--cream); border-radius: 12px;">
+                    <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--gold);"></div>
+                    <div style="flex: 1; font-size: 12px; font-weight: 500;">Dhuhr</div>
+                    <div style="font-size: 11px; color: var(--ink-mute);">13:44</div>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--sage); color: var(--cream); border-radius: 12px;">
+                    <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--gold);"></div>
+                    <div style="flex: 1; font-size: 12px; font-weight: 500;">Asr</div>
+                    <div style="font-size: 11px; opacity: .7;">dans 42 min</div>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--cream); border-radius: 12px; opacity: .5;">
+                    <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--sage);"></div>
+                    <div style="flex: 1; font-size: 12px; font-weight: 500;">Maghrib</div>
+                    <div style="font-size: 11px; color: var(--ink-mute);">19:28</div>
+                  </div>
+                </div>
+                <div style="margin-top: 20px; padding: 14px; background: var(--cream); border-radius: 12px;">
+                  <div style="font-size: 10px; color: var(--sage); margin-bottom: 4px;">TEMPS D'ECRAN AUJOURD'HUI</div>
+                  <div class="serif" style="font-size: 20px; letter-spacing: -0.02em;">2h 14<span style="color: var(--ink-mute); font-size: 14px;"> / 4h</span></div>
+                  <div style="height: 3px; background: #e8e3d8; border-radius: 2px; margin-top: 8px; overflow: hidden;">
+                    <div style="width: 56%; height: 100%; background: var(--sage);"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 24px;">
+          <div class="serif italic" style="font-size: 14px; color: var(--gold); margin-bottom: 4px;">i.</div>
+          <div style="font-size: 14px; color: var(--cream); opacity: .9;">Journee en un regard</div>
+        </div>
+      </div>
+      <div class="reveal" style="transform: translateY(-20px);">
+        <div style="width: 100%; max-width: 260px; margin: 0 auto;">
+          <div style="width: 100%; aspect-ratio: 280/580; background: #1C201D; border-radius: 36px; padding: 8px; box-shadow: 0 40px 80px -20px rgba(0,0,0,.5);">
+            <div style="width: 100%; height: 100%; background: var(--sage-deep); border-radius: 28px; overflow: hidden; position: relative; color: var(--cream);">
+              <div style="position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 80px; height: 20px; background: #1C201D; border-radius: 14px;"></div>
+              <div style="padding: 44px 20px 20px; display: flex; flex-direction: column; height: 100%;">
+                <div style="font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px;">Dhikr &middot; tasbih</div>
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+                  <div class="serif italic" style="font-size: 20px; color: var(--gold); margin-bottom: 8px;">&#1587;&#1615;&#1576;&#1618;&#1581;&#1614;&#1575;&#1606;&#1614; &#1649;&#1604;&#1604;&#1617;&#1648;&#1607;</div>
+                  <div class="serif" style="font-size: 15px; line-height: 1.4; color: var(--cream); opacity: .7; margin-bottom: 40px;">Sub'hanAllah</div>
+                  <div style="width: 140px; height: 140px; border-radius: 50%; border: 1.5px solid var(--gold); display: flex; align-items: center; justify-content: center; position: relative;">
+                    <div style="position: absolute; inset: -8px; border-radius: 50%; border: 1px solid rgba(201,169,97,.3);"></div>
+                    <div class="serif" style="font-size: 56px; color: var(--gold); letter-spacing: -0.03em; font-weight: 300;">27</div>
+                  </div>
+                  <div style="font-size: 11px; color: var(--cream); opacity: .5; margin-top: 20px; letter-spacing: 0.1em;">OBJECTIF &middot; 33</div>
+                </div>
+                <div style="display: flex; gap: 6px; justify-content: center; padding-bottom: 10px;">
+                  <div style="width: 24px; height: 3px; border-radius: 2px; background: var(--gold);"></div>
+                  <div style="width: 24px; height: 3px; border-radius: 2px; background: rgba(245,240,232,.2);"></div>
+                  <div style="width: 24px; height: 3px; border-radius: 2px; background: rgba(245,240,232,.2);"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 24px;">
+          <div class="serif italic" style="font-size: 14px; color: var(--gold); margin-bottom: 4px;">ii.</div>
+          <div style="font-size: 14px; color: var(--cream); opacity: .9;">Dhikr guide</div>
+        </div>
+      </div>
+      <div class="reveal" style="transform: translateY(20px);">
+        <div style="width: 100%; max-width: 260px; margin: 0 auto;">
+          <div style="width: 100%; aspect-ratio: 280/580; background: #1C201D; border-radius: 36px; padding: 8px; box-shadow: 0 30px 60px -20px rgba(0,0,0,.4);">
+            <div style="width: 100%; height: 100%; background: var(--cream); border-radius: 28px; overflow: hidden; position: relative; color: var(--ink);">
+              <div style="position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 80px; height: 20px; background: #1C201D; border-radius: 14px;"></div>
+              <div style="padding: 44px 20px 20px;">
+                <div style="font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sage); margin-bottom: 8px;">Instagram ouvert</div>
+                <div class="serif" style="font-size: 20px; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 24px;">Un instant avant d'entrer ?</div>
+                <div style="background: var(--off-white); border-radius: 16px; padding: 18px; margin-bottom: 16px;">
+                  <div class="serif italic" style="font-size: 18px; line-height: 1.4; color: var(--sage); margin-bottom: 12px;">&laquo; Et quand Mes serviteurs t'interrogent sur Moi, Je suis tout proche. &raquo;</div>
+                  <div style="font-size: 10px; color: var(--ink-mute); letter-spacing: 0.1em;">AL-BAQARA &middot; 2:186</div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                  <div style="padding: 12px; background: var(--sage); color: var(--cream); border-radius: 12px; text-align: center; font-size: 12px; font-weight: 500;">Lire la sourate (3 min)</div>
+                  <div style="padding: 12px; background: transparent; border: 1px solid rgba(74,93,79,.3); color: var(--sage); border-radius: 12px; text-align: center; font-size: 12px; font-weight: 500;">Faire un dhikr (1 min)</div>
+                  <div style="padding: 12px; text-align: center; font-size: 11px; color: var(--ink-mute);">Entrer dans Instagram quand meme</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 24px;">
+          <div class="serif italic" style="font-size: 14px; color: var(--gold); margin-bottom: 4px;">iii.</div>
+          <div style="font-size: 14px; color: var(--cream); opacity: .9;">La porte de l'intention</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about" style="padding: 140px 0;">
+  <div class="wrap">
+    <div style="display: grid; grid-template-columns: 1fr 1.3fr; gap: 80px; align-items: center;" class="bio-grid">
+      <div class="reveal">
+        <div style="position: relative; aspect-ratio: 4/5; background: var(--cream); border-radius: 2px; overflow: hidden;">
+          <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(74,93,79,.15), rgba(74,93,79,.45)); mix-blend-mode: multiply;"></div>
+          <svg viewBox="0 0 400 500" style="position: absolute; inset: 0; width: 100%; height: 100%; filter: sepia(.4) hue-rotate(60deg) saturate(.6);" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <radialGradient id="face" cx="50%" cy="35%" r="50%">
+                <stop offset="0%" stop-color="#8a9a8d"/>
+                <stop offset="100%" stop-color="#4A5D4F"/>
+              </radialGradient>
+            </defs>
+            <rect width="400" height="500" fill="#6E8470"/>
+            <ellipse cx="200" cy="200" rx="90" ry="110" fill="url(#face)"/>
+            <path d="M 90 500 Q 90 340 200 320 Q 310 340 310 500 Z" fill="#3A4A3F"/>
+            <ellipse cx="175" cy="195" rx="4" ry="2" fill="#1C201D" opacity=".6"/>
+            <ellipse cx="225" cy="195" rx="4" ry="2" fill="#1C201D" opacity=".6"/>
+          </svg>
+          <div style="position: absolute; bottom: 20px; left: 20px; right: 20px; color: var(--cream); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; opacity: .8;">Lyceen &middot; Bussy-Saint-Georges, 2026</div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="eyebrow" style="margin-bottom: 20px;">04 &mdash; Qui est derriere</div>
+        <h2 class="serif" style="font-size: clamp(32px, 4vw, 50px); line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 32px; font-weight: 400;">
+          <span class="italic">Youssef Aouled Mohamed Ben Ali,</span><br>
+          lyceen, developpeur, musulman.
+        </h2>
+        <p style="font-size: 17px; line-height: 1.65; color: var(--ink-mute); margin-bottom: 20px;">
+          Lyceen en seconde au lycee Martin Luther King a Bussy-Saint-Georges, en classe euro, profil scientifique. D'origine tunisienne, je developpe Mizan sur mon temps libre, entre les cours, les devoirs et les cinq prieres.
+        </p>
+        <p style="font-size: 17px; line-height: 1.65; color: var(--ink-mute); margin-bottom: 32px;">
+          Pas une start-up, pas une levee de fonds, pas de modele economique derriere. Juste un projet d'ado qui essaie de faire quelque chose d'utile avec ce qu'il sait coder : rendre un peu de temps a ce qui compte vraiment.
+        </p>
+        <div style="display: flex; gap: 32px; flex-wrap: wrap; padding-top: 24px; border-top: 1px solid rgba(74,93,79,.15);">
+          <div>
+            <div style="font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sage); margin-bottom: 6px;">Lycee</div>
+            <div style="font-size: 14px; color: var(--ink);">Martin Luther King &middot; Bussy-St-Georges</div>
+          </div>
+          <div>
+            <div style="font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sage); margin-bottom: 6px;">Filiere</div>
+            <div style="font-size: 14px; color: var(--ink);">Seconde euro &middot; Scientifique</div>
+          </div>
+          <div>
+            <div style="font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sage); margin-bottom: 6px;">Origines</div>
+            <div style="font-size: 14px; color: var(--ink);">Tunisie</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="soutien" style="padding: 140px 0; background: var(--cream);">
+  <div class="wrap" style="max-width: 900px; text-align: center;">
+    <div class="reveal">
+      <div class="eyebrow" style="margin-bottom: 20px;">06 &mdash; Soutenir</div>
+      <h2 class="serif" style="font-size: clamp(36px, 4.8vw, 56px); line-height: 1.05; letter-spacing: -0.02em; font-weight: 400; margin-bottom: 28px;">
+        Un petit coup de pouce,<br><span class="italic" style="color: var(--sage);">si le projet vous parle.</span>
+      </h2>
+      <p style="font-size: 17px; color: var(--ink-mute); line-height: 1.65; max-width: 580px; margin: 0 auto 40px;">
+        Pas de cagnotte officielle, pas d'objectif a atteindre. Juste une petite tirelire pour celles et ceux qui veulent participer, meme modestement. Chaque don aide a payer les outils, les serveurs, et surtout le temps consacre au projet en dehors des cours.
+      </p>
+      <div style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-bottom: 32px;">
+        <a href="#" class="btn btn-gold">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1.1 1L12 21.2l7.7-7.7 1.1-1a5.5 5.5 0 0 0 0-7.9z"/></svg>
+          <span>Donner ce que je veux</span>
+        </a>
+        <a href="#" class="btn btn-ghost">
+          <span>Partager le projet</span>
+        </a>
+      </div>
+      <div style="display: inline-flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-mute); padding: 10px 18px; background: var(--off-white); border-radius: 999px; border: 1px solid rgba(74,93,79,.12);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A5.2 5.2 0 0 1 12 5a5.2 5.2 0 0 1 8 5.2C20 17.5 12 22 12 22z"/></svg>
+        <span>Un merci sincere a chaque contribution, grande ou petite.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" style="padding: 140px 0;">
+  <div class="wrap" style="max-width: 920px;">
+    <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px; align-items: start;" class="faq-grid">
+      <div class="reveal" style="position: sticky; top: 100px;">
+        <div class="eyebrow" style="margin-bottom: 20px;">05 &mdash; Questions</div>
+        <h2 class="serif" style="font-size: clamp(32px, 4vw, 48px); line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 24px; font-weight: 400;">
+          Les questions<br><span class="italic" style="color: var(--sage);">qu'on nous pose.</span>
+        </h2>
+        <p style="font-size: 15px; color: var(--ink-mute); line-height: 1.55;">
+          Une autre question ? Ecrivez a <a href="mailto:mizan.application.2026@gmail.com" style="color: var(--sage); border-bottom: 1px solid currentColor;">mizan.application.2026@gmail.com</a>
+        </p>
+      </div>
+
+      <div class="reveal">
+        <details class="faq-item" open>
+          <summary><span>Quand l'application sera-t-elle disponible ?</span><span class="faq-mark">+</span></summary>
+          <div class="faq-body">Mizan est en developpement actif sur mon temps libre, en parallele du lycee. Une premiere beta privee est visee pour Ramadan 2026, avec une sortie publique dans la foulee sur iOS et Android.</div>
+        </details>
+        <details class="faq-item">
+          <summary><span>L'application sera-t-elle gratuite ?</span><span class="faq-mark">+</span></summary>
+          <div class="faq-body">Oui, entierement et pour toujours. Pas de version premium, pas d'abonnement, pas de publicite, pas de revente de donnees. Mizan n'est pas un business, c'est un projet personnel.</div>
+        </details>
+        <details class="faq-item">
+          <summary><span>Mes donnees sont-elles collectees ?</span><span class="faq-mark">+</span></summary>
+          <div class="faq-body">Non. Tout est stocke localement sur votre appareil : temps d'ecran, dhikr, prieres. Aucun compte a creer, aucun serveur a qui vos donnees remontent.</div>
+        </details>
+        <details class="faq-item">
+          <summary><span>Qui developpe Mizan ?</span><span class="faq-mark">+</span></summary>
+          <div class="faq-body">Un lyceen de seconde, seul, a Bussy-Saint-Georges. Pas d'equipe, pas d'investisseurs, juste du code ecrit entre deux cours. Si vous voulez contribuer (dev, design, retours beta, conseils religieux), ecrivez-moi.</div>
+        </details>
+        <details class="faq-item">
+          <summary><span>Pourquoi faire ca au lycee plutot que plus tard ?</span><span class="faq-mark">+</span></summary>
+          <div class="faq-body">Parce que le probleme est maintenant. Mes amis, ma generation, moi-meme, on perd des heures chaque jour sur des apps qui nous vident. Attendre d'etre &laquo; ingenieur diplome &raquo; pour agir n'avait pas de sens.</div>
+        </details>
+        <details class="faq-item">
+          <summary><span>Comment puis-je aider sans donner d'argent ?</span><span class="faq-mark">+</span></summary>
+          <div class="faq-body">Trois facons : parler du projet autour de vous, rejoindre la liste d'attente pour tester la beta, ou envoyer vos retours et idees a l'adresse ci-contre. L'ecoute vaut plus qu'un don.</div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer style="padding: 60px 0 40px; border-top: 1px solid rgba(74,93,79,.12); background: var(--off-white);">
+  <div class="wrap" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <img src="icon.png" alt="Logo Mizan" style="width: 32px; height: 32px; display: block;">
+      <span class="serif" style="font-size: 16px;">Mizan</span>
+      <span style="font-size: 12px; color: var(--ink-mute); margin-left: 8px;">&copy; 2026 &middot; Projet independant</span>
+    </div>
+    <div style="display: flex; gap: 28px; font-size: 13px; color: var(--ink-mute);">
+      <a href="#">Mentions legales</a>
+      <a href="#">Confidentialite</a>
+      <a href="#">Code source</a>
+      <a href="mailto:mizan.application.2026@gmail.com">Contact</a>
+    </div>
+  </div>
+</footer>
+
+</main>
+
+<script>
+(function(){
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  var nodes = document.querySelectorAll('.reveal');
+  nodes.forEach(function(n){ n.classList.add('will-animate'); io.observe(n); });
+  setTimeout(function(){ nodes.forEach(function(n){ n.classList.add('in'); }); }, 2000);
+
+  var float = document.querySelector('.float');
+  window.addEventListener('scroll', function(){
+    var y = window.scrollY;
+    if (float && y < 800) float.style.transform = 'translateY(' + (y * -0.08) + 'px)';
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>
